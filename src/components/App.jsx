@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Modal from 'react-modal';
 import axios from 'axios';
 import { RotatingLines } from 'react-loader-spinner';
 
@@ -9,6 +10,8 @@ export class App extends Component {
     isLoading: false,
     isSearched: false,
     currentPage: 1,
+    isModalOpen: false,
+    selectedImage: null,
   };
 
   // SPRAWDZENIE CZY KOMPONENT PIXABAY SIĘ ZAMONTOWAŁ
@@ -16,6 +19,8 @@ export class App extends Component {
     if (this.state.isSearched) {
       this.getImagesFromPixabay();
     }
+
+    Modal.setAppElement('body');
   }
 
   // POBRANIE OBRAZÓW Z API PIXABAY
@@ -71,6 +76,16 @@ export class App extends Component {
     });
   };
 
+  // OTWARCIE OKNA MODALNEGO
+  openModal = image => {
+    this.setState({ isModalOpen: true, selectedImage: image });
+  };
+
+  // ZAMKNIĘCIE OKNA MODALNEGO
+  closeModal = () => {
+    this.setState({ isModalOpen: false, selectedImage: null });
+  };
+
   render() {
     return (
       <>
@@ -107,7 +122,11 @@ export class App extends Component {
               {this.state.images.length > 0 ? (
                 this.state.images.map((image, index) => (
                   <li className="gallery-item" key={index}>
-                    <img src={image.previewURL} alt={image.tags} />
+                    <img
+                      src={image.previewURL}
+                      alt={image.tags}
+                      onClick={() => this.openModal(image.largeImageURL)}
+                    />
                   </li>
                 ))
               ) : (
@@ -123,6 +142,15 @@ export class App extends Component {
         </button>
 
         {/* TUTAJ BĘDZIE MODAL */}
+        <Modal
+          isOpen={this.state.isModalOpen}
+          onRequestClose={this.closeModal}
+          contentLabel="Image Modal"
+        >
+          {this.state.selectedImage && (
+            <img src={this.state.selectedImage} alt="Selected" />
+          )}
+        </Modal>
       </>
     );
   }
