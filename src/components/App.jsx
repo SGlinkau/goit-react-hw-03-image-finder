@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { RotatingLines } from 'react-loader-spinner';
 
 export class App extends Component {
   state = {
@@ -60,6 +61,16 @@ export class App extends Component {
     this.getImagesFromPixabay();
   };
 
+  // CZYSZCZENIE GALERII
+  handleClear = () => {
+    this.setState({
+      images: [],
+      searchQuery: '',
+      isSearched: false,
+      currentPage: 1,
+    });
+  };
+
   render() {
     return (
       <>
@@ -77,13 +88,20 @@ export class App extends Component {
               value={this.state.searchQuery}
               onChange={this.handleInputChange}
             />
-            <button type="button">clear</button>
+            <button type="button" onClick={this.handleClear}>
+              Clear search results
+            </button>
           </form>
         </header>
         {/* IMAGES GALLERY */}
         <section className="gallery">
           {this.state.isLoading ? (
-            <p>Proszę czekać, trwa ładowanie obrazów...</p>
+            <RotatingLines
+              type="Oval"
+              color="#00BFFF"
+              height={100}
+              width={100}
+            />
           ) : (
             <ul>
               {this.state.images.length > 0 ? (
