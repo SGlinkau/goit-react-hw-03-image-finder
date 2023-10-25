@@ -102,6 +102,7 @@ export class App extends Component {
               placeholder="Search images and photos"
               value={this.state.searchQuery}
               onChange={this.handleInputChange}
+              required
             />
             <button type="button" onClick={this.handleClear}>
               Clear search results
