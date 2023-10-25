@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import Modal from 'react-modal';
 import axios from 'axios';
-import { RotatingLines } from 'react-loader-spinner';
+import SearchBar from './SearchBar/SearchBar.jsx';
+import ImageGallery from './ImageGallery/ImageGallery.jsx';
+import LoadMoreButton from './LoadMoreButton/LoadMoreButton.jsx';
+import ImageModal from './Modal/Modal.jsx';
 
 export class App extends Component {
   state = {
@@ -12,18 +14,9 @@ export class App extends Component {
     currentPage: 1,
     isModalOpen: false,
     selectedImage: null,
+    isEmptySearchQuery: false,
   };
 
-  // SPRAWDZENIE CZY KOMPONENT PIXABAY SIĘ ZAMONTOWAŁ
-  componentDidMount() {
-    if (this.state.isSearched) {
-      this.getImagesFromPixabay();
-    }
-
-    Modal.setAppElement('body');
-  }
-
-  // POBRANIE OBRAZÓW Z API PIXABAY
   getImagesFromPixabay = async () => {
     this.setState({ isLoading: true });
     try {
@@ -46,19 +39,20 @@ export class App extends Component {
     }
   };
 
-  // WARTOŚĆ JAKICH OBRAZÓW SZUKAMY W INPUT
-  handleInputChange = event => {
-    this.setState({ searchQuery: event.target.value, isSearched: false });
+  handleSearch = query => {
+    this.setState(
+      {
+        images: [],
+        searchQuery: query,
+        isSearched: true,
+        currentPage: 1,
+      },
+      () => {
+        this.getImagesFromPixabay();
+      }
+    );
   };
 
-  // WYSZUKIWANIE OBRAZÓW NA BAZIE HASŁA W INPUT
-  handleSearch = event => {
-    event.preventDefault();
-    this.setState({ images: [], isSearched: true, currentPage: 1 });
-    this.getImagesFromPixabay();
-  };
-
-  // SZUKANIE WIĘKSZEJ ILOŚC OBRAZÓW PO WCIŚNIĘCIU PRZYCISKU
   handleLoadMore = () => {
     if (this.state.searchQuery.trim() === '') {
       this.setState({ isEmptySearchQuery: true });
@@ -71,7 +65,6 @@ export class App extends Component {
     }
   };
 
-  // CZYSZCZENIE GALERII
   handleClear = () => {
     this.setState({
       images: [],
@@ -81,85 +74,44 @@ export class App extends Component {
     });
   };
 
-  // OTWARCIE OKNA MODALNEGO
   openModal = image => {
     this.setState({ isModalOpen: true, selectedImage: image });
   };
 
-  // ZAMKNIĘCIE OKNA MODALNEGO
   closeModal = () => {
     this.setState({ isModalOpen: false, selectedImage: null });
+  };
+
+  handleInputChange = query => {
+    this.setState({ searchQuery: query, isSearched: false });
   };
 
   render() {
     return (
       <>
-        {/* SEARCH BAR */}
-        <header>
-          <form onSubmit={this.handleSearch}>
-            <button type="submit">
-              <span>Search</span>
-            </button>
-            <input
-              type="text"
-              autoComplete="off"
-              autoFocus
-              placeholder="Search images and photos"
-              value={this.state.searchQuery}
-              onChange={this.handleInputChange}
-              required
-            />
-            <button type="button" onClick={this.handleClear}>
-              Clear search results
-            </button>
-          </form>
-        </header>
-        {/* IMAGES GALLERY */}
-        <section className="gallery">
-          {this.state.isEmptySearchQuery ? (
-            <p>Please provide input above!</p>
-          ) : this.state.isLoading ? (
-            <RotatingLines
-              type="Oval"
-              color="#00BFFF"
-              height={100}
-              width={100}
-            />
-          ) : (
-            <ul>
-              {this.state.images.length > 0 ? (
-                this.state.images.map((image, index) => (
-                  <li className="gallery-item" key={index}>
-                    <img
-                      src={image.previewURL}
-                      alt={image.tags}
-                      onClick={() => this.openModal(image.largeImageURL)}
-                    />
-                  </li>
-                ))
-              ) : (
-                <p>Enter what pictures you would like to see</p>
-              )}
-            </ul>
-          )}
-        </section>
+        <SearchBar
+          searchQuery={this.state.searchQuery}
+          handleSearch={this.handleSearch}
+          handleClear={this.handleClear}
+        />
 
-        {/* BUTTON LOAD MORE */}
-        <button type="button" onClick={this.handleLoadMore}>
-          Load more!
-        </button>
+        <ImageGallery
+          images={this.state.images}
+          isEmptySearchQuery={this.state.isEmptySearchQuery}
+          isLoading={this.state.isLoading}
+          openModal={this.openModal}
+        />
 
-        {/* TUTAJ BĘDZIE MODAL */}
-        <Modal
-          isOpen={this.state.isModalOpen}
-          onRequestClose={this.closeModal}
-          contentLabel="Image Modal"
-        >
-          {this.state.selectedImage && (
-            <img src={this.state.selectedImage} alt="Selected" />
-          )}
-        </Modal>
+        <LoadMoreButton handleLoadMore={this.handleLoadMore} />
+
+        <ImageModal
+          isModalOpen={this.state.isModalOpen}
+          closeModal={this.closeModal}
+          selectedImage={this.state.selectedImage}
+        />
       </>
     );
   }
 }
+
+export default App;
