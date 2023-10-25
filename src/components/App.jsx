@@ -60,10 +60,15 @@ export class App extends Component {
 
   // SZUKANIE WIĘKSZEJ ILOŚC OBRAZÓW PO WCIŚNIĘCIU PRZYCISKU
   handleLoadMore = () => {
-    this.setState(prevState => ({
-      currentPage: prevState.currentPage + 1,
-    }));
-    this.getImagesFromPixabay();
+    if (this.state.searchQuery.trim() === '') {
+      this.setState({ isEmptySearchQuery: true });
+    } else {
+      this.setState(prevState => ({
+        currentPage: prevState.currentPage + 1,
+        isEmptySearchQuery: false,
+      }));
+      this.getImagesFromPixabay();
+    }
   };
 
   // CZYSZCZENIE GALERII
@@ -111,7 +116,9 @@ export class App extends Component {
         </header>
         {/* IMAGES GALLERY */}
         <section className="gallery">
-          {this.state.isLoading ? (
+          {this.state.isEmptySearchQuery ? (
+            <p>Please provide input above!</p>
+          ) : this.state.isLoading ? (
             <RotatingLines
               type="Oval"
               color="#00BFFF"
@@ -131,7 +138,7 @@ export class App extends Component {
                   </li>
                 ))
               ) : (
-                <p>Proszę podać wartość szukanej frazy</p>
+                <p>Enter what pictures you would like to see</p>
               )}
             </ul>
           )}
