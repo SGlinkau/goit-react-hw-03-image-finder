@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import CSS from './SearchBar.module.css';
+import PropTypes from 'prop-types';
 
 function SearchBar(props) {
   const [searchQuery, setSearchQuery] = useState(props.searchQuery);
@@ -50,5 +51,11 @@ function SearchBar(props) {
     </header>
   );
 }
+
+SearchBar.propTypes = {
+  searchQuery: PropTypes.string.isRequired,
+  handleSearch: PropTypes.func.isRequired,
+  handleClear: PropTypes.func.isRequired,
+};
 
 export default SearchBar;

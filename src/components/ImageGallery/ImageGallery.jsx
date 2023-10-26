@@ -1,6 +1,7 @@
 import React from 'react';
 import { RotatingLines } from 'react-loader-spinner';
 import CSS from './ImageGallery.module.css';
+import PropTypes from 'prop-types';
 
 function ImageGallery({ isEmptySearchQuery, isLoading, images, openModal }) {
   return (
@@ -30,5 +31,12 @@ function ImageGallery({ isEmptySearchQuery, isLoading, images, openModal }) {
     </section>
   );
 }
+
+ImageGallery.propTypes = {
+  isEmptySearchQuery: PropTypes.bool.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  images: PropTypes.array.isRequired,
+  openModal: PropTypes.func.isRequired,
+};
 
 export default ImageGallery;

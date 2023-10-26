@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 import SearchBar from './SearchBar/SearchBar.jsx';
 import ImageGallery from './ImageGallery/ImageGallery.jsx';
 import LoadMoreButton from './LoadMoreButton/LoadMoreButton.jsx';
@@ -102,7 +103,10 @@ export class App extends Component {
           openModal={this.openModal}
         />
 
-        <LoadMoreButton handleLoadMore={this.handleLoadMore} />
+        <LoadMoreButton
+          handleLoadMore={this.handleLoadMore}
+          images={this.state.images}
+        />
 
         <ImageModal
           isModalOpen={this.state.isModalOpen}
@@ -113,5 +117,29 @@ export class App extends Component {
     );
   }
 }
+
+SearchBar.propTypes = {
+  searchQuery: PropTypes.string.isRequired,
+  handleSearch: PropTypes.func.isRequired,
+  handleClear: PropTypes.func.isRequired,
+};
+
+ImageGallery.propTypes = {
+  images: PropTypes.array.isRequired,
+  isEmptySearchQuery: PropTypes.bool.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  openModal: PropTypes.func.isRequired,
+};
+
+LoadMoreButton.propTypes = {
+  handleLoadMore: PropTypes.func.isRequired,
+  images: PropTypes.array.isRequired,
+};
+
+ImageModal.propTypes = {
+  isModalOpen: PropTypes.bool.isRequired,
+  closeModal: PropTypes.func.isRequired,
+  selectedImage: PropTypes.string,
+};
 
 export default App;

@@ -16,6 +16,7 @@
 .galleryImage {
   height: 250px;
   width: 250px;
+  border: solid 5px black;
 }
 
 p {
