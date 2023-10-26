@@ -1,8 +1,9 @@
 import React from 'react';
+import CSS from './LoadMoreButton.module.css';
 
 function LoadMoreButton({ handleLoadMore }) {
   return (
-    <button type="button" onClick={handleLoadMore}>
+    <button className={CSS.loaderButton} type="button" onClick={handleLoadMore}>
       Load more!
     </button>
   );

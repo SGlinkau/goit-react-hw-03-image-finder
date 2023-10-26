@@ -55,7 +55,7 @@ export class App extends Component {
 
   handleLoadMore = () => {
     if (this.state.searchQuery.trim() === '') {
-      this.setState({ isEmptySearchQuery: true });
+      return;
     } else {
       this.setState(prevState => ({
         currentPage: prevState.currentPage + 1,
@@ -88,7 +88,7 @@ export class App extends Component {
 
   render() {
     return (
-      <>
+      <div className="App">
         <SearchBar
           searchQuery={this.state.searchQuery}
           handleSearch={this.handleSearch}
@@ -109,7 +109,7 @@ export class App extends Component {
           closeModal={this.closeModal}
           selectedImage={this.state.selectedImage}
         />
-      </>
+      </div>
     );
   }
 }

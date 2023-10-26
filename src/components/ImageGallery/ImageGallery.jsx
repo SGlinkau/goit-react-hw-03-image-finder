@@ -1,19 +1,21 @@
 import React from 'react';
 import { RotatingLines } from 'react-loader-spinner';
+import CSS from './ImageGallery.module.css';
 
 function ImageGallery({ isEmptySearchQuery, isLoading, images, openModal }) {
   return (
-    <section className="gallery">
+    <section className={CSS.gallery}>
       {isEmptySearchQuery ? (
         <p>Please provide input above!</p>
       ) : isLoading ? (
-        <RotatingLines type="Oval" color="#00BFFF" height={100} width={100} />
+        <RotatingLines type="Oval" color="#0a7cff" height={100} width={100} />
       ) : (
-        <ul>
+        <ul className={CSS.galleryList}>
           {images.length > 0 ? (
             images.map((image, index) => (
-              <li className="gallery-item" key={index}>
+              <li className={CSS.galleryItem} key={index}>
                 <img
+                  className={CSS.galleryImage}
                   src={image.previewURL}
                   alt={image.tags}
                   onClick={() => openModal(image.largeImageURL)}
